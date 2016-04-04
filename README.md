@@ -88,9 +88,9 @@ app/assets/javascripts/Some/Module/Name/View.elm
 ```elm
 module Some.Module.Name.View (..) where
 
-import Html
-import Html.Attributes
-import Html.Events
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Signal
 
 import Some.Module.Name.Model exposing (..)
