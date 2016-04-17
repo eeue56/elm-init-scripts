@@ -42,8 +42,6 @@ main : Signal Html
 main =
     app.html
 
-port authToken : String
-
 port tasks : Signal (Task.Task Never ())
 port tasks =
     app.tasks
