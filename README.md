@@ -1,7 +1,9 @@
 # elm-init-scripts
 
 
-This is a script to bootstrap your projects in the style that NRI use internally
+This is a script to bootstrap your projects in the style that NRI uses internally.
+
+This script supports Elm version `0.18.0`
 
 ## Usage:
 
@@ -9,9 +11,27 @@ This is a script to bootstrap your projects in the style that NRI use internally
 python bootstrap.py Some.Module.Name app/assets/javascripts/
 ```
 
-Should generate the following files:
+Don't forget to update `elm-package.json` to include the chosen source directory:
+```json
+{
+    ...
+    "source-directories": [
+        "."
+        ...
+      , "./src"
+    ],
+    ...
+    "dependencies": {
+        "elm-lang/core": "5.0.0 <= v < 6.0.0",
+        "elm-lang/html": "2.0.0 <= v < 3.0.0"
+    },
+    "elm-version": "0.18.0 <= v < 0.19.0"
+}
+```
 
-app/assets/javascripts/Some/Module/Name/API.js.elm
+The script should generate the following files:
+
+`app/assets/javascripts/Some/Module/Name/API.js.elm`
 ```elm
 module Some.Module.Name.API where
 module Some.Module.Name.API exposing (main)
@@ -39,7 +59,7 @@ main =
    , view = view
    , subscriptions = \_ -> Sub.none }
 ```
-app/assets/javascripts/Some/Module/Name/Update.elm
+`app/assets/javascripts/Some/Module/Name/Update.elm`
 ```elm
 module Some.Module.Name.Update exposing (update)
 
@@ -52,14 +72,14 @@ update msg model =
     NoOp ->
       (model, Cmd.none)
 ```
-app/assets/javascripts/Some/Module/Name/Model.elm
+`app/assets/javascripts/Some/Module/Name/Model.elm`
 ```elm
 module Some.Module.Name.Model where
 
 type alias Model =
   {}
 ```
-app/assets/javascripts/Some/Module/Name/View.elm
+`app/assets/javascripts/Some/Module/Name/View.elm`
 ```elm
 module Some.Module.Name.View exposing (view)
 
@@ -74,14 +94,14 @@ view : Model -> Html Msg
 view model =
   div [] [ text "Hello world!" ]
 ```
-app/assets/javascripts/Some/Module/Name/Messages.elm
+`app/assets/javascripts/Some/Module/Name/Messages.elm`
 ```elm
 module Some.Module.Name.Messages exposing (Msg(..))
 
 type Msg
   = NoOp
 ```
-app/assets/javascripts/Some/Module/Name/Subscriptions.elm
+`app/assets/javascripts/Some/Module/Name/Subscriptions.elm`
 ```elm
 module Some.Module.Name.Subscriptions exposing (subscriptions)
 
