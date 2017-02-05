@@ -6,92 +6,90 @@ import os
 import os.path
 
 api_template = """
-module {module_name}.API where
+module {module_name}.API exposing (main)
 
 import Html exposing (Html)
-import StartApp
-import Effects exposing (Never)
-import Task exposing (Task)
 
-import {module_name}.Update exposing (update, Action(..), Addresses)
+import {module_name}.Messages exposing (Msg(..))
+import {module_name}.Subscriptions exposing (subscriptions)
 import {module_name}.Model exposing (Model)
+import {module_name}.Update exposing (update)
 import {module_name}.View exposing (view)
 
+initialModel : Model
+initialModel = {{ }}
 
-app : StartApp.App Model
-app =
-    let
-        initModel : Model
-        initModel =
-            {{ }}
+init : ( Model, Cmd Msg )
+init =
+  ( initialModel
+  , Cmd.none )
 
-        modelWithEffects =
-            (initModel, Effects.none)
-
-        addresses =
-            {{ }}
-    in
-        StartApp.start
-            {{ init = modelWithEffects
-            , view = view
-            , update = (update addresses)
-            , inputs = [ ]
-            }}
-
-main : Signal Html
 main =
-    app.html
+  Html.program
+    {{ init = init
+    , update = update
+    , view = view
+    , subscriptions = \_ -> Sub.none }}
+""".lstrip()
 
-port tasks : Signal (Task.Task Never ())
-port tasks =
-    app.tasks
+messages_template = """
+module {module_name}.Messages exposing (Msg(..))
+
+type Msg
+  = NoOp
+""".lstrip()
+
+subscriptions_template = """
+module {module_name}.Subscriptions exposing (subscriptions)
+
+import {module_name}.Model exposing (Model)
+import {module_name}.Messages exposing (Msg(..))
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.none
 """.lstrip()
 
 model_template = """
-module {module_name}.Model where
+module {module_name}.Model exposing (Model)
 
 type alias Model =
   {{ }}
 """.lstrip()
 
 update_template = """
-module {module_name}.Update where
+module {module_name}.Update exposing (update)
 
-import Effects exposing (Effects)
-import {module_name}.Model exposing (..)
+import {module_name}.Model exposing (Model)
+import {module_name}.Messages exposing (Msg(..))
 
-type Action
-  = NoOp
-
-type alias Addresses =
-  {{ }}
-
-update : Addresses -> Action -> Model -> (Model, Effects.Effects Action)
-update addresses action model =
-  case action of
+update : Msg -> Model -> (Model, Cmd Msg)
+update msg model =
+  case msg of
     NoOp ->
-      (model, Effects.none)
+      (model, Cmd.none)
 """.lstrip()
 
 view_template = """
-module {module_name}.View (..) where
+module {module_name}.View exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Signal
 
-import {module_name}.Model exposing (..)
-import {module_name}.Update exposing (..)
+import {module_name}.Model exposing (Model)
+import {module_name}.Messages exposing (Msg(..))
 
-
-view : Signal.Address Action -> Model -> Html
-view address model =
+view : Model -> Html Msg
+view model =
   div [] [ text "Hello world!" ]
+
 """.lstrip()
 
 templates = {
     'API.js.elm': api_template,
+    'Messages.elm': messages_template,
+    'Subscriptions.elm': subscriptions_template,
     'Model.elm': model_template,
     'Update.elm': update_template,
     'View.elm': view_template
